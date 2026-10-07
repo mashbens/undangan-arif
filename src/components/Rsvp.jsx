@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CheckCircle2, Send } from 'lucide-react';
-import { wedding } from '../data/wedding';
+import { CheckCircle2, Loader2, Send } from 'lucide-react';
 import { timeAgo } from '../utils/format';
 import Reveal from './Reveal';
 import SectionTitle from './SectionTitle';
 
-const STORAGE_KEY = 'wedding-wishes';
+// Path relatif: ikut sub-path undangan, mis. /arif-fitria/api/wishes
+const API_URL = 'api/wishes';
 
 const ATTENDANCE = {
   hadir: { label: 'Hadir', badge: 'bg-sage-100 text-sage-700' },
@@ -14,46 +14,49 @@ const ATTENDANCE = {
   ragu: { label: 'Masih Ragu', badge: 'bg-amber-50 text-amber-700' },
 };
 
-// Sementara ucapan disimpan di browser (localStorage).
-// Nanti bisa diganti ke Google Sheets / Firebase agar semua tamu bisa melihat.
-function loadWishes() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (Array.isArray(saved)) return saved;
-  } catch {
-    // abaikan data rusak
-  }
-  return wedding.sampleWishes;
-}
-
-function saveWishes(wishes) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(wishes));
-  } catch {
-    // storage tidak tersedia (mode privat)
-  }
-}
-
 export default function Rsvp({ guest }) {
-  const [wishes, setWishes] = useState(loadWishes);
+  const [wishes, setWishes] = useState([]);
+  const [loadState, setLoadState] = useState('loading'); // loading | ready | error
   const [form, setForm] = useState({ name: guest, attendance: 'hadir', guests: 1, message: '' });
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState('idle'); // idle | sending | sent
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetch(API_URL)
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((data) => {
+        setWishes(data);
+        setLoadState('ready');
+      })
+      .catch(() => setLoadState('error'));
+  }, []);
 
   const update = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.message.trim()) return;
+    if (!form.name.trim() || !form.message.trim() || status === 'sending') return;
 
-    const next = [
-      { id: Date.now(), name: form.name.trim(), attendance: form.attendance, message: form.message.trim(), createdAt: Date.now() },
-      ...wishes,
-    ];
-    setWishes(next);
-    saveWishes(next);
-    setForm((f) => ({ ...f, message: '' }));
-    setSent(true);
-    setTimeout(() => setSent(false), 3000);
+    setStatus('sending');
+    setError('');
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Gagal mengirim ucapan.');
+
+      setWishes((list) => [data, ...list]);
+      setLoadState('ready');
+      setForm((f) => ({ ...f, message: '' }));
+      setStatus('sent');
+      setTimeout(() => setStatus('idle'), 3000);
+    } catch (err) {
+      setError(err.message === 'Failed to fetch' ? 'Koneksi bermasalah, coba lagi.' : err.message);
+      setStatus('idle');
+    }
   };
 
   const attendingCount = wishes.filter((w) => w.attendance === 'hadir').length;
@@ -110,17 +113,21 @@ export default function Rsvp({ guest }) {
             maxLength={500}
           />
 
-          <button type="submit" className="btn-primary w-full py-3">
+          {error && <p className="text-center text-sm text-rose-700">{error}</p>}
+
+          <button type="submit" disabled={status === 'sending'} className="btn-primary w-full py-3 disabled:opacity-70">
             <AnimatePresence mode="wait" initial={false}>
               <motion.span
-                key={sent ? 'sent' : 'idle'}
+                key={status}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 className="inline-flex items-center gap-2"
               >
-                {sent ? <CheckCircle2 size={16} /> : <Send size={16} strokeWidth={1.5} />}
-                {sent ? 'Terima kasih!' : 'Kirim Ucapan'}
+                {status === 'sent' && <CheckCircle2 size={16} />}
+                {status === 'sending' && <Loader2 size={16} className="animate-spin" />}
+                {status === 'idle' && <Send size={16} strokeWidth={1.5} />}
+                {{ idle: 'Kirim Ucapan', sending: 'Mengirim...', sent: 'Terima kasih!' }[status]}
               </motion.span>
             </AnimatePresence>
           </button>
@@ -132,6 +139,12 @@ export default function Rsvp({ guest }) {
           <span>{wishes.length} ucapan</span>
           <span>{attendingCount} akan hadir</span>
         </div>
+
+        {loadState === 'loading' && <p className="py-6 text-center text-sm text-ink/50">Memuat ucapan...</p>}
+        {loadState === 'error' && <p className="py-6 text-center text-sm text-rose-700">Ucapan belum bisa dimuat.</p>}
+        {loadState === 'ready' && wishes.length === 0 && (
+          <p className="py-6 text-center font-serif text-lg italic text-ink/50">Jadilah yang pertama memberi ucapan 🤍</p>
+        )}
 
         <div className="no-scrollbar max-h-[26rem] space-y-3 overflow-y-auto pr-1">
           <AnimatePresence initial={false}>

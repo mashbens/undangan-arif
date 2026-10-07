@@ -34,4 +34,15 @@ make dev        # development, http://localhost:5173
 make up         # build image Docker + jalankan di http://localhost:8090
 make down       # hentikan container
 make deploy     # git pull + docker compose di VM (push ke GitHub dulu)
+make backup     # unduh semua ucapan & RSVP dari VM ke folder backup/
 ```
+
+## Ucapan & RSVP
+
+Disimpan oleh server Node kecil di [server/index.js](server/index.js) (tanpa dependency):
+
+- `GET /api/wishes` — daftar ucapan (terbaru dulu)
+- `POST /api/wishes` — `{ name, attendance: hadir|tidak|ragu, guests, message }`
+
+Data ada di `wishes.json` dalam Docker volume `undangan-arif-data`, jadi aman saat rebuild.
+Jumlah tamu (`guests`) hanya tersimpan di file, tidak ditampilkan ke publik.

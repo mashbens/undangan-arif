@@ -1,13 +1,19 @@
 # Dipakai di VM: container ikut network app_net milik nginx (/root/nginx),
-# lalu nginx meneruskan undangan.bgcipta.web.id/<slug>/ ke sini. Tidak membuka port ke host.
+# lalu nginx meneruskan undangan.bgcipta.web.id/<slug>/ ke port 3000 di sini. Tidak membuka port ke host.
 services:
   undangan:
     build: .
     image: undangan-arif
     container_name: undangan-arif
     restart: unless-stopped
+    volumes:
+      - wishes-data:/data   # ucapan & RSVP (wishes.json), aman saat rebuild
     networks:
       - app_net
+
+volumes:
+  wishes-data:
+    name: undangan-arif-data
 
 networks:
   app_net:

@@ -111,22 +111,4 @@ export const wedding = {
     name: 'Arif & Fitria',
     address: 'Jl. Melati No. 12, RT 03/RW 05, Kebayoran Baru, Jakarta Selatan 12110',
   },
-
-  // Contoh ucapan awal (akan tampil di bagian ucapan)
-  sampleWishes: [
-    {
-      id: 1,
-      name: 'Rina & Keluarga',
-      attendance: 'hadir',
-      message: 'Selamat menempuh hidup baru! Semoga menjadi keluarga sakinah, mawaddah, warahmah. 🤍',
-      createdAt: Date.parse('2026-10-01T10:00:00+07:00'),
-    },
-    {
-      id: 2,
-      name: 'Dimas',
-      attendance: 'ragu',
-      message: 'Barakallahu lakuma wa baraka alaikuma wa jama’a bainakuma fii khair. Bahagia selalu bro!',
-      createdAt: Date.parse('2026-09-28T19:30:00+07:00'),
-    },
-  ],
 };

@@ -36,6 +36,8 @@ export const wedding = {
 
   // Taruh file lagu di public/music/song.mp3 (kosongkan '' untuk mematikan musik)
   music: 'music/song.mp3',
+  // Wajib dicantumkan untuk lagu berlisensi CC BY. Kosongkan '' kalau pakai lagu sendiri.
+  musicCredit: '',
 
   quote: {
     text: 'Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri, supaya kamu merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang.',

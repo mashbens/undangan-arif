@@ -28,6 +28,7 @@ export default function Closing() {
         </Reveal>
 
         <p className="mt-16 text-[11px] tracking-widest text-cream/40">Made with ♡</p>
+        {wedding.musicCredit && <p className="mt-2 text-[10px] text-cream/30">Musik: {wedding.musicCredit}</p>}
       </div>
     </footer>
   );

@@ -4,27 +4,84 @@ import { wedding } from '../data/wedding';
 import Reveal from './Reveal';
 import SectionTitle from './SectionTitle';
 
-function CopyButton({ text, light = false }) {
+// Clipboard API kadang diblokir di browser bawaan WhatsApp/Instagram -> pakai cara lama
+function fallbackCopy(text) {
+  const el = document.createElement('textarea');
+  el.value = text;
+  el.setAttribute('readonly', '');
+  el.style.cssText = 'position:fixed;opacity:0';
+  document.body.appendChild(el);
+  el.select();
+  const ok = document.execCommand('copy');
+  el.remove();
+  return ok;
+}
+
+function useCopy() {
   const [copied, setCopied] = useState(false);
 
-  const copy = async () => {
+  const copy = async (text) => {
+    let ok = false;
     try {
       await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      ok = true;
     } catch {
-      window.prompt('Salin teks ini:', text);
+      ok = fallbackCopy(text);
     }
+    if (!ok) return window.prompt('Salin teks ini:', text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
+  return [copied, copy];
+}
+
+function CopyButton({ text, label = 'Salin' }) {
+  const [copied, copy] = useCopy();
   return (
-    <button
-      onClick={copy}
-      className={`btn px-4 py-2 text-xs ${light ? 'glass text-cream hover:bg-white/20' : 'btn-outline'}`}
-    >
+    <button onClick={() => copy(text)} className="btn-outline px-4 py-2 text-xs">
       {copied ? <Check size={14} /> : <Copy size={14} strokeWidth={1.5} />}
-      {copied ? 'Tersalin' : 'Salin'}
+      {copied ? 'Tersalin' : label}
     </button>
+  );
+}
+
+function BankCard({ gift }) {
+  const [copied, copy] = useCopy();
+  const formatted = gift.number.replace(/(.{4})/g, '$1 ').trim();
+
+  return (
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sage-600 via-sage-700 to-sage-900 p-6 text-cream shadow-soft">
+      <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
+      <div className="absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-gold/15" />
+
+      <div className="relative">
+        <div className="flex items-start justify-between">
+          <div className="h-8 w-11 rounded-md bg-gradient-to-br from-gold-light to-gold shadow-inner" />
+          <p className="font-serif text-2xl font-semibold italic tracking-wide">{gift.bank}</p>
+        </div>
+
+        <p className="mt-7 text-[10px] uppercase tracking-[0.25em] text-cream/60">Nomor Rekening</p>
+        <button
+          onClick={() => copy(gift.number)}
+          aria-label={`Salin nomor rekening ${gift.number}`}
+          className="mt-1 block max-w-full break-words text-left font-mono text-[clamp(1rem,5.2vw,1.35rem)] tabular-nums tracking-[0.1em]"
+        >
+          {formatted}
+        </button>
+
+        <p className="mt-4 text-[10px] uppercase tracking-[0.25em] text-cream/60">Atas Nama</p>
+        <p className="mt-0.5 break-words text-base">{gift.name}</p>
+
+        <button
+          onClick={() => copy(gift.number)}
+          className="btn mt-6 w-full bg-cream py-3 font-normal text-sage-800 shadow-lg hover:bg-white"
+        >
+          {copied ? <Check size={16} /> : <Copy size={16} strokeWidth={1.5} />}
+          {copied ? 'Nomor rekening tersalin!' : 'Salin Nomor Rekening'}
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -43,25 +100,7 @@ export default function Gift() {
       <div className="space-y-5">
         {wedding.gifts.map((gift, i) => (
           <Reveal key={gift.number} delay={i * 0.1}>
-            <div className="relative aspect-[1.65/1] overflow-hidden rounded-3xl bg-gradient-to-br from-sage-600 via-sage-700 to-sage-900 p-6 text-cream shadow-soft">
-              <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
-              <div className="absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-gold/15" />
-
-              <div className="relative flex h-full flex-col justify-between">
-                <div className="flex items-start justify-between">
-                  <div className="h-8 w-11 rounded-md bg-gradient-to-br from-gold-light to-gold shadow-inner" />
-                  <p className="font-serif text-2xl font-semibold italic tracking-wide">{gift.bank}</p>
-                </div>
-                <p className="font-mono text-xl tracking-[0.18em]">{gift.number.replace(/(.{4})/g, '$1 ').trim()}</p>
-                <div className="flex items-end justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-[10px] uppercase tracking-[0.25em] text-cream/60">Atas Nama</p>
-                    <p className="truncate text-sm">{gift.name}</p>
-                  </div>
-                  <CopyButton text={gift.number} light />
-                </div>
-              </div>
-            </div>
+            <BankCard gift={gift} />
           </Reveal>
         ))}
 
@@ -76,7 +115,7 @@ export default function Gift() {
                 {wedding.giftAddress.address}
               </p>
               <div className="mt-4">
-                <CopyButton text={`${wedding.giftAddress.name} — ${wedding.giftAddress.address}`} />
+                <CopyButton text={`${wedding.giftAddress.name} — ${wedding.giftAddress.address}`} label="Salin Alamat" />
               </div>
             </div>
           </Reveal>

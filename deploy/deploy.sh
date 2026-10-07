@@ -19,4 +19,4 @@ SSH=(ssh -p "$PORT" -o StrictHostKeyChecking=accept-new)
   docker image prune -f >/dev/null
 "
 
-echo "✓ https://undangan.bgcipta.web.id/arif-landvia/"
+echo "✓ https://undangan.bgcipta.web.id/arif-fitria/"

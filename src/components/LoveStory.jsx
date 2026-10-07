@@ -4,6 +4,8 @@ import Reveal from './Reveal';
 import SectionTitle from './SectionTitle';
 
 export default function LoveStory() {
+  if (!wedding.stories.length) return null;
+
   return (
     <section id="story" className="section bg-sage-50">
       <SectionTitle eyebrow="Our Journey" title="Kisah Kami" />

@@ -24,7 +24,7 @@ export const wedding = {
   },
 
   // Tanggal utama untuk countdown (format ISO, zona WIB = +07:00)
-  date: '2026-12-12T08:00:00+07:00',
+  date: '2027-05-02T08:00:00+07:00',
 
   images: {
     cover: unsplash('1537633552985-df8429e8048b'),
@@ -47,48 +47,27 @@ export const wedding = {
   events: [
     {
       title: 'Akad Nikah',
-      start: '2026-12-12T08:00:00+07:00',
-      end: '2026-12-12T10:00:00+07:00',
+      start: '2027-05-02T08:00:00+07:00',
+      end: '2027-05-02T10:00:00+07:00',
       time: '08.00 – 10.00 WIB',
-      venue: 'Masjid Agung Al-Azhar',
-      address: 'Jl. Sisingamangaraja, Kebayoran Baru, Jakarta Selatan',
-      mapsQuery: 'Masjid Agung Al-Azhar Jakarta',
+      venue: 'Bolabong',
+      address: 'Jl. Raya Kemang Parung Bogor No.4, Kemang, Kec. Kemang, Kabupaten Bogor, Jawa Barat',
+      mapsQuery: 'Bolabong, Jl. Raya Kemang Parung Bogor No.4, Kemang, Bogor',
     },
     {
       title: 'Resepsi',
-      start: '2026-12-12T11:00:00+07:00',
-      end: '2026-12-12T14:00:00+07:00',
-      time: '11.00 – 14.00 WIB',
-      venue: 'The Glass House Ballroom',
-      address: 'Jl. Senopati No. 88, Kebayoran Baru, Jakarta Selatan',
-      mapsQuery: 'Senopati Kebayoran Baru Jakarta',
+      start: '2027-05-02T11:00:00+07:00',
+      end: '2027-05-02T14:00:00+07:00',
+      time: '11.00 WIB – selesai',
+      venue: 'Bolabong',
+      address: 'Jl. Raya Kemang Parung Bogor No.4, Kemang, Kec. Kemang, Kabupaten Bogor, Jawa Barat',
+      mapsQuery: 'Bolabong, Jl. Raya Kemang Parung Bogor No.4, Kemang, Bogor',
     },
   ],
 
-  stories: [
-    {
-      year: '2019',
-      title: 'Pertama Bertemu',
-      text: 'Berawal dari sebuah acara kampus, kami dipertemukan tanpa sengaja. Obrolan singkat yang ternyata berlanjut panjang.',
-      image: unsplash('1520854221256-17451cc331bf', 700),
-    },
-    {
-      year: '2022',
-      title: 'Menjalin Kasih',
-      text: 'Setelah bertahun-tahun saling mengenal, kami memutuskan untuk melangkah bersama dan saling menguatkan.',
-    },
-    {
-      year: '2025',
-      title: 'Lamaran',
-      text: 'Di hadapan kedua keluarga, kami mengikat janji untuk menuju jenjang yang lebih serius.',
-      image: unsplash('1606800052052-a08af7148866', 700),
-    },
-    {
-      year: '2026',
-      title: 'Hari Bahagia',
-      text: 'Dengan izin Allah, kami akan mengikrarkan janji suci pernikahan. Doakan kami, ya!',
-    },
-  ],
+  // Kisah cinta — kosong = section disembunyikan. Contoh isi:
+  // { year: '2019', title: 'Pertama Bertemu', text: '...', image: 'images/story-1.jpg' },
+  stories: [],
 
   gallery: [
     '1583939003579-730e3918a45a',
@@ -105,12 +84,7 @@ export const wedding = {
     '1469371670807-013ccf25f16a',
   ].map((id) => unsplash(id, 1000)),
 
-  gifts: [
-    { bank: 'BCA', number: '1234567890', name: 'Arif Budiman' },
-    { bank: 'Mandiri', number: '1370012345678', name: 'Fitria' },
-  ],
-  giftAddress: {
-    name: 'Arif & Fitria',
-    address: 'Jl. Melati No. 12, RT 03/RW 05, Kebayoran Baru, Jakarta Selatan 12110',
-  },
+  gifts: [{ bank: 'BRI', number: '771301017540534', name: 'Fitria' }],
+  // Alamat kirim kado — null = disembunyikan. Contoh: { name: 'Arif & Fitria', address: '...' }
+  giftAddress: null,
 };

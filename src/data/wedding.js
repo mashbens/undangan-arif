@@ -11,15 +11,15 @@ export const wedding = {
     fullName: 'Arif Budiman',
     parents: 'Putra dari Bapak Sudarman & Ibu Juarsih',
     instagram: '', // isi username tanpa @ untuk menampilkan tombol Instagram
-    photo: unsplash('1550005809-91ad75fb315f', 800),
-    photoPosition: '85% center',
+    photo: 'images/arif.jpg',
+    photoPosition: 'center',
   },
   bride: {
     nickname: 'Fitria',
     fullName: 'Fitria',
     parents: 'Putri dari Bapak Be’en & Ibu Yati',
     instagram: '',
-    photo: unsplash('1525258946800-98cfd641d0de', 800),
+    photo: 'images/fitria.jpg',
     photoPosition: 'center',
   },
 
@@ -28,10 +28,10 @@ export const wedding = {
 
   images: {
     cover: 'images/cover.jpg',
-    hero: unsplash('1583939003579-730e3918a45a'),
-    desktop: unsplash('1519741497674-611481863552', 1800),
+    hero: 'images/hero.jpg',
+    desktop: 'images/couple-2.jpg',
     countdown: unsplash('1465495976277-4387d4b0b4c6'),
-    closing: unsplash('1460978812857-470ed1c77af0'),
+    closing: 'images/couple-2.jpg',
   },
 
   // Taruh file lagu di public/music/song.mp3 (kosongkan '' untuk mematikan musik)
@@ -69,20 +69,8 @@ export const wedding = {
   // { year: '2019', title: 'Pertama Bertemu', text: '...', image: 'images/story-1.jpg' },
   stories: [],
 
-  gallery: [
-    '1583939003579-730e3918a45a',
-    '1546032996-6dfacbacbf3f',
-    '1537633552985-df8429e8048b',
-    '1465495976277-4387d4b0b4c6',
-    '1591604466107-ec97de577aff',
-    '1529636798458-92182e662485',
-    '1460978812857-470ed1c77af0',
-    '1520854221256-17451cc331bf',
-    '1519741497674-611481863552',
-    '1606800052052-a08af7148866',
-    '1511285560929-80b456fea0bc',
-    '1469371670807-013ccf25f16a',
-  ].map((id) => unsplash(id, 1000)),
+  // Foto galeri — tambahkan file baru di public/images lalu tulis di sini
+  gallery: ['images/hero.jpg', 'images/cover.jpg', 'images/couple-2.jpg'],
 
   gifts: [{ bank: 'BRI', number: '771301017540534', name: 'Fitria' }],
   // Alamat kirim kado — null = disembunyikan. Contoh: { name: 'Arif & Fitria', address: '...' }

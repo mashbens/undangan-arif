@@ -7,7 +7,7 @@ export default function Closing() {
 
   return (
     <footer className="relative overflow-hidden px-6 pb-36 pt-28 text-center text-cream">
-      <img src={images.closing} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+      <img src={images.closing} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover object-[center_30%]" />
       <div className="absolute inset-0 bg-gradient-to-b from-cream via-sage-900/75 to-sage-900" />
 
       <div className="relative pt-20">

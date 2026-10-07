@@ -100,7 +100,7 @@ export default function Gallery() {
                   src={src}
                   alt={`Galeri ${i + 1}`}
                   loading="lazy"
-                  className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                  className="h-full w-full object-cover object-[center_30%] transition duration-700 group-hover:scale-110"
                 />
                 <span className="absolute inset-0 bg-sage-900/0 transition duration-500 group-hover:bg-sage-900/20" />
               </button>

@@ -1,0 +1,14 @@
+# Dipakai di VM: container ikut network app_net milik nginx (/root/nginx),
+# lalu nginx meneruskan undangan.bgcipta.web.id/<slug>/ ke sini. Tidak membuka port ke host.
+services:
+  undangan:
+    build: .
+    image: undangan-arif
+    container_name: undangan-arif
+    restart: unless-stopped
+    networks:
+      - app_net
+
+networks:
+  app_net:
+    external: true

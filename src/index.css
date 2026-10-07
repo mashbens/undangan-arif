@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-sage-900 font-sans font-light text-ink antialiased;
+  }
+  ::selection {
+    @apply bg-gold/30;
+  }
+}
+
+@layer components {
+  .section {
+    @apply relative px-6 py-24;
+  }
+  .glass {
+    @apply border border-white/25 bg-white/10 backdrop-blur-md;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-normal tracking-wide transition duration-300 active:scale-95;
+  }
+  .btn-primary {
+    @apply btn bg-sage-700 text-cream shadow-soft hover:bg-sage-800;
+  }
+  .btn-outline {
+    @apply btn border border-sage-300 text-sage-700 hover:border-sage-600 hover:bg-sage-600 hover:text-cream;
+  }
+  .input {
+    @apply w-full rounded-xl border border-sage-200 bg-white/80 px-4 py-3 text-sm outline-none transition placeholder:text-ink/40 focus:border-sage-500 focus:ring-4 focus:ring-sage-200/60;
+  }
+  /* Tekstur kertas halus */
+  .paper {
+    background-color: #f7f3ec;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(184, 151, 90, 0.08), transparent 40%),
+      radial-gradient(circle at 85% 60%, rgba(108, 134, 97, 0.08), transparent 45%);
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}

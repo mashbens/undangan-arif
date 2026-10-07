@@ -27,7 +27,7 @@ export const wedding = {
   date: '2027-05-02T08:00:00+07:00',
 
   images: {
-    cover: unsplash('1537633552985-df8429e8048b'),
+    cover: 'images/cover.jpg',
     hero: unsplash('1583939003579-730e3918a45a'),
     desktop: unsplash('1519741497674-611481863552', 1800),
     countdown: unsplash('1465495976277-4387d4b0b4c6'),

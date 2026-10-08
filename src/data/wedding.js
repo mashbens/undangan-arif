@@ -35,7 +35,7 @@ export const wedding = {
   },
 
   // Taruh file lagu di public/music/song.mp3 (kosongkan '' untuk mematikan musik)
-  music: 'music/song2.mp3',
+  music: 'music/song3.mp3',
   // Wajib dicantumkan untuk lagu berlisensi CC BY. Kosongkan '' kalau pakai lagu sendiri.
   musicCredit: '',
 

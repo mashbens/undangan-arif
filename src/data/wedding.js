@@ -8,7 +8,7 @@ const unsplash = (id, w = 1200) => `https://images.unsplash.com/photo-${id}?w=${
 export const wedding = {
   groom: {
     nickname: 'Arif',
-    fullName: 'Arif Budiman',
+    fullName: 'Arif Budiman, S.Kom.',
     parents: 'Putra dari Bapak Sudarman & Ibu Juarsih',
     instagram: '', // isi username tanpa @ untuk menampilkan tombol Instagram
     photo: 'images/arif.jpg',
@@ -16,8 +16,8 @@ export const wedding = {
   },
   bride: {
     nickname: 'Fitria',
-    fullName: 'Fitria',
-    parents: 'Putri dari Bapak Be’en & Ibu Yati',
+    fullName: 'Fitria, S.Pd.',
+    parents: 'Putri dari Bapak Saipudin (Be’en) & Ibu Yanih',
     instagram: '',
     photo: 'images/fitria.jpg',
     photoPosition: 'center',
@@ -29,13 +29,13 @@ export const wedding = {
   images: {
     cover: 'images/cover.jpg',
     hero: 'images/hero.jpg',
-    desktop: 'images/couple-2.jpg',
+    desktop: 'images/hero.jpg',
     countdown: unsplash('1465495976277-4387d4b0b4c6'),
-    closing: 'images/couple-2.jpg',
+    closing: 'images/cover.jpg',
   },
 
   // Taruh file lagu di public/music/song.mp3 (kosongkan '' untuk mematikan musik)
-  music: 'music/song.mp3',
+  music: 'music/song2.mp3',
   // Wajib dicantumkan untuk lagu berlisensi CC BY. Kosongkan '' kalau pakai lagu sendiri.
   musicCredit: '',
 
@@ -50,18 +50,20 @@ export const wedding = {
       start: '2027-05-02T08:00:00+07:00',
       end: '2027-05-02T10:00:00+07:00',
       time: '08.00 – 10.00 WIB',
-      venue: 'Billabong',
-      address: 'Jl. Bilabong 16, Kemang, Kabupaten Bogor, Jawa Barat',
-      mapsQuery: 'Billabong Kemang Bogor',
+      venue: 'Bilabong Lake House',
+      address: 'Jl. Bilabong Permai, Cimanggis, Kec. Bojonggede, Kabupaten Bogor, Jawa Barat 16920',
+      mapsQuery: 'Bilabong Lake House Bojonggede Bogor', // untuk peta yang ditempel
+      mapsLink: 'https://maps.app.goo.gl/tiNos2yXedtYeL1C8', // tombol "Lihat Lokasi"
     },
     {
       title: 'Resepsi',
       start: '2027-05-02T11:00:00+07:00',
       end: '2027-05-02T14:00:00+07:00',
       time: '11.00 WIB – selesai',
-      venue: 'Billabong',
-      address: 'Jl. Bilabong 16, Kemang, Kabupaten Bogor, Jawa Barat',
-      mapsQuery: 'Billabong Kemang Bogor',
+      venue: 'Bilabong Lake House',
+      address: 'Jl. Bilabong Permai, Cimanggis, Kec. Bojonggede, Kabupaten Bogor, Jawa Barat 16920',
+      mapsQuery: 'Bilabong Lake House Bojonggede Bogor', // untuk peta yang ditempel
+      mapsLink: 'https://maps.app.goo.gl/tiNos2yXedtYeL1C8', // tombol "Lihat Lokasi"
     },
   ],
 
@@ -70,7 +72,7 @@ export const wedding = {
   stories: [],
 
   // Foto galeri — tambahkan file baru di public/images lalu tulis di sini
-  gallery: ['images/hero.jpg', 'images/cover.jpg', 'images/couple-2.jpg'],
+  gallery: ['images/hero.jpg', 'images/cover.jpg'],
 
   gifts: [{ bank: 'BRI', number: '771301017540534', name: 'Fitria' }],
   // Alamat kirim kado — null = disembunyikan. Contoh: { name: 'Arif & Fitria', address: '...' }

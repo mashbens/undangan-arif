@@ -42,7 +42,7 @@ function EventCard({ event, delay }) {
         </div>
 
         <div className="mt-7 flex flex-wrap justify-center gap-3">
-          <a href={mapsUrl(event.mapsQuery)} target="_blank" rel="noreferrer" className="btn-primary">
+          <a href={event.mapsLink || mapsUrl(event.mapsQuery)} target="_blank" rel="noreferrer" className="btn-primary">
             <MapPin size={15} strokeWidth={1.5} />
             Lihat Lokasi
           </a>

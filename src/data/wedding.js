@@ -9,7 +9,7 @@ export const wedding = {
   groom: {
     nickname: 'Arif',
     fullName: 'Arif Budiman, S.Kom.',
-    parents: 'Putra dari Bapak Sudarman & Ibu Juarsih',
+    parents: 'Putra dari Bapak Drs. H. Sudarman & Ibu Juarsih',
     instagram: '', // isi username tanpa @ untuk menampilkan tombol Instagram
     photo: 'images/arif.jpg',
     photoPosition: 'center',
@@ -24,7 +24,7 @@ export const wedding = {
   },
 
   // Tanggal utama untuk countdown (format ISO, zona WIB = +07:00)
-  date: '2027-05-02T08:00:00+07:00',
+  date: '2027-05-09T08:00:00+07:00',
 
   images: {
     cover: 'images/cover.jpg',
@@ -47,8 +47,8 @@ export const wedding = {
   events: [
     {
       title: 'Akad Nikah',
-      start: '2027-05-02T08:00:00+07:00',
-      end: '2027-05-02T10:00:00+07:00',
+      start: '2027-05-09T08:00:00+07:00',
+      end: '2027-05-09T10:00:00+07:00',
       time: '08.00 – 10.00 WIB',
       venue: 'Bilabong Lake House',
       address: 'Jl. Bilabong Permai, Cimanggis, Kec. Bojonggede, Kabupaten Bogor, Jawa Barat 16920',
@@ -57,8 +57,8 @@ export const wedding = {
     },
     {
       title: 'Resepsi',
-      start: '2027-05-02T11:00:00+07:00',
-      end: '2027-05-02T14:00:00+07:00',
+      start: '2027-05-09T11:00:00+07:00',
+      end: '2027-05-09T14:00:00+07:00',
       time: '11.00 WIB – selesai',
       venue: 'Bilabong Lake House',
       address: 'Jl. Bilabong Permai, Cimanggis, Kec. Bojonggede, Kabupaten Bogor, Jawa Barat 16920',

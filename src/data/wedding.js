@@ -74,7 +74,10 @@ export const wedding = {
   // Foto galeri — tambahkan file baru di public/images lalu tulis di sini
   gallery: ['images/hero.jpg', 'images/cover.jpg'],
 
-  gifts: [{ bank: 'BRI', number: '771301017540534', name: 'Fitria' }],
+  gifts: [
+    { bank: 'BRI', number: '771301017540534', name: 'Fitria' },
+    { bank: 'Bank Jago', number: '103554360426', name: 'Arif Budiman' },
+  ],
   // Alamat kirim kado — null = disembunyikan. Contoh: { name: 'Arif & Fitria', address: '...' }
   giftAddress: null,
 };

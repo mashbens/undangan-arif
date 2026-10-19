@@ -1,5 +1,7 @@
 // Server undangan: menyajikan hasil build (dist/) + API ucapan & RSVP.
 // Tanpa dependency. Data disimpan di DATA_DIR/wishes.json.
+// Kalau SHEET_URL & SHEET_KEY diisi, Google Sheet jadi database utama (lihat deploy/google-sheet.gs)
+// dan wishes.json hanya cadangan untuk saat Google tidak bisa dihubungi.
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
@@ -8,6 +10,10 @@ const PORT = Number(process.env.PORT) || 3000;
 const DATA_DIR = path.resolve(process.env.DATA_DIR || './data');
 const STATIC_DIR = process.env.STATIC_DIR ? path.resolve(process.env.STATIC_DIR) : null;
 const DATA_FILE = path.join(DATA_DIR, 'wishes.json');
+const IMPORTED_FLAG = path.join(DATA_DIR, 'sheet-imported');
+const SHEET_URL = process.env.SHEET_URL || '';
+const SHEET_KEY = process.env.SHEET_KEY || '';
+const SHEET_REFRESH_MS = 60_000; // baca ulang Sheet paling sering 1x per menit, hanya jika ada pengunjung
 
 const ATTENDANCE = ['hadir', 'tidak', 'ragu'];
 const MAX_NAME = 60;
@@ -53,8 +59,74 @@ function saveWishes() {
 }
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
-const wishes = loadWishes();
+let wishes = loadWishes();
 const lastPostByIp = new Map();
+
+// ---------- sinkron Google Sheet ----------
+// Ucapan baru diberi tanda `pending` sampai berhasil masuk Sheet, supaya tidak hilang
+// kalau Google sedang error atau server restart.
+
+let lastSync = 0;
+let syncing = null;
+let pushing = null;
+
+async function sheetFetch(options = {}) {
+  const url = options.method === 'POST' ? SHEET_URL : `${SHEET_URL}?key=${encodeURIComponent(SHEET_KEY)}`;
+  const res = await fetch(url, { ...options, redirect: 'follow', signal: AbortSignal.timeout(20_000) });
+  const data = await res.json();
+  if (!res.ok || data.error) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+}
+
+function pushPending() {
+  if (pushing) return pushing;
+  const batch = wishes.filter((w) => w.pending);
+  if (!batch.length) return Promise.resolve();
+  pushing = sheetFetch({
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ key: SHEET_KEY, wishes: batch.map(({ pending, ...w }) => w) }),
+  })
+    .then(() => {
+      for (const w of batch) delete w.pending;
+      saveWishes();
+    })
+    .catch((err) => console.error(`Gagal kirim ke Sheet (dicoba lagi nanti): ${err.message}`))
+    .finally(() => {
+      pushing = null;
+    });
+  return pushing;
+}
+
+function syncFromSheet() {
+  if (syncing) return syncing;
+  const startedAt = Date.now();
+  syncing = (async () => {
+    await pushPending();
+    const { wishes: fromSheet } = await sheetFetch();
+    // Ucapan yang belum masuk Sheet, atau masuk saat Sheet sedang dibaca, tetap dipertahankan
+    const ids = new Set(fromSheet.map((w) => w.id));
+    const local = wishes.filter((w) => !ids.has(w.id) && (w.pending || w.createdAt >= startedAt));
+    wishes = [...local, ...fromSheet].sort((a, b) => b.createdAt - a.createdAt);
+    saveWishes();
+    lastSync = Date.now();
+  })()
+    .catch((err) => console.error(`Gagal baca Sheet, pakai data terakhir: ${err.message}`))
+    .finally(() => {
+      syncing = null;
+    });
+  return syncing;
+}
+
+if (SHEET_URL) {
+  // Pertama kali Sheet dipasang: pindahkan semua ucapan lama ke Sheet
+  if (!fs.existsSync(IMPORTED_FLAG)) {
+    for (const w of wishes) w.pending = true;
+    saveWishes();
+    fs.writeFileSync(IMPORTED_FLAG, new Date().toISOString());
+  }
+  syncFromSheet();
+}
 
 // ---------- helper ----------
 
@@ -86,6 +158,7 @@ function readJsonBody(req) {
 }
 
 const clean = (value, max) => String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, max);
+const isVisible = (w) => !w.hidden;
 const publicWish = ({ id, name, attendance, message, createdAt }) => ({ id, name, attendance, message, createdAt });
 
 // ---------- API ----------
@@ -95,7 +168,11 @@ async function handleApi(req, res, pathname) {
 
   if (pathname !== '/api/wishes') return sendJson(res, 404, { error: 'Tidak ditemukan' });
 
-  if (req.method === 'GET') return sendJson(res, 200, wishes.map(publicWish));
+  if (req.method === 'GET') {
+    // Jawab dari memori; Sheet dibaca ulang di belakang layar kalau data sudah lewat 1 menit
+    if (SHEET_URL && Date.now() - lastSync > SHEET_REFRESH_MS) syncFromSheet();
+    return sendJson(res, 200, wishes.filter(isVisible).map(publicWish));
+  }
 
   if (req.method !== 'POST') return sendJson(res, 405, { error: 'Method tidak didukung' });
 
@@ -114,8 +191,10 @@ async function handleApi(req, res, pathname) {
   if (!name || !message) return sendJson(res, 400, { error: 'Nama dan ucapan wajib diisi.' });
 
   const wish = { id: `${now}-${Math.random().toString(36).slice(2, 8)}`, name, attendance, guests, message, createdAt: now };
+  if (SHEET_URL) wish.pending = true;
   wishes.unshift(wish);
   saveWishes();
+  if (SHEET_URL) pushPending();
   lastPostByIp.set(ip, now);
   if (lastPostByIp.size > 5000) lastPostByIp.clear();
 
@@ -173,6 +252,7 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, () => {
   console.log(`Undangan jalan di http://localhost:${PORT} — ${wishes.length} ucapan tersimpan di ${DATA_FILE}`);
+  console.log(SHEET_URL ? 'Database: Google Sheet (wishes.json sebagai cadangan)' : 'Database: wishes.json');
 });
 
 // Penulisan data sinkron, jadi aman langsung keluar

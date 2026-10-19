@@ -6,6 +6,10 @@ services:
     image: undangan-arif
     container_name: undangan-arif
     restart: unless-stopped
+    environment:
+      # Google Sheet sebagai database ucapan; isi di file .env di VM (tidak masuk git)
+      SHEET_URL: ${SHEET_URL:-}
+      SHEET_KEY: ${SHEET_KEY:-}
     volumes:
       - wishes-data:/data   # ucapan & RSVP (wishes.json), aman saat rebuild
     networks:
